@@ -16,6 +16,7 @@ bench = false
 
 [dependencies]
 bootloader = "0.9"
+volatile = "0.2.6"
 
 [package.metadata.bootimage]
 run-command = ["qemu-system-x86_64", "-drive", "format=raw,file={}" ]
