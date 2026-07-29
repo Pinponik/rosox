@@ -11,12 +11,14 @@ panic = "abort"
 
 [[bin]]
 name = "rosox"
-test = false
+test = false # true
 bench = false
 
 [dependencies]
 bootloader = "0.9"
 volatile = "0.2.6"
+lazy_static = { version = "1.0", features = ["spin_no_std"] }
+spin = "0.5.2"
 
 [package.metadata.bootimage]
 run-command = ["qemu-system-x86_64", "-drive", "format=raw,file={}" ]
