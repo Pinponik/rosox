@@ -1,20 +1,32 @@
-//! rOSox
-
 #![no_std]
 #![no_main]
-
-mod vga_buffer;
+#![feature(custom_test_frameworks)]
+#![test_runner(rosox::test_runner)]
+#![reexport_test_harness_main = "test_main"]
 
 use core::panic::PanicInfo;
-
-#[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
-    println!("{}", _info);
-    loop {}
-}
+use rosox::println;
 
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
-    println!("Hello World{}", "!");
+    println!("rOSox v{}", env!("CARGO_PKG_VERSION"));
+
+    #[cfg(test)]
+    test_main();
+
     loop {}
+}
+
+/// This function is called on panic.
+#[cfg(not(test))]
+#[panic_handler]
+fn panic(info: &PanicInfo) -> ! {
+    println!("{}", info);
+    loop {}
+}
+
+#[cfg(test)]
+#[panic_handler]
+fn panic(info: &PanicInfo) -> ! {
+    rosox::test_panic_handler(info)
 }
