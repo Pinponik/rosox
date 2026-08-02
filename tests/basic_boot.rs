@@ -6,21 +6,18 @@
 
 use core::panic::PanicInfo;
 use rosox::println;
+use rosox::test_runner;
 
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    loop {}
-}
-
-#[unsafe(no_mangle)]
+#[unsafe(no_mangle)] // don't mangle the name of this function
 pub extern "C" fn _start() -> ! {
     test_main();
 
     loop {}
 }
 
-fn test_runner(tests: &[&dyn Fn()]) {
-    unimplemented!();
+#[panic_handler]
+fn panic(info: &PanicInfo) -> ! {
+    rosox::test_panic_handler(info)
 }
 
 #[test_case]

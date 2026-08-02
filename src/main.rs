@@ -9,11 +9,17 @@ use rosox::println;
 
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
-    println!("rOSox v{}", env!("CARGO_PKG_VERSION"));
+    println!("rOSox v{}\n", env!("CARGO_PKG_VERSION"));
+
+    rosox::init(); // new
+
+    // invoke a breakpoint exception
+    x86_64::instructions::interrupts::int3(); // new
 
     #[cfg(test)]
     test_main();
 
+    println!("It did not crash!");
     loop {}
 }
 
