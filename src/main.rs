@@ -3,9 +3,11 @@
 #![feature(custom_test_frameworks)]
 #![test_runner(rosox::test_runner)]
 #![reexport_test_harness_main = "test_main"]
+#![feature(abi_x86_interrupt)]
+
+pub mod arch;
 
 use core::panic::PanicInfo;
-use rosox::println;
 
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
