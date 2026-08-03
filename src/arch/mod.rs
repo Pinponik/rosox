@@ -5,10 +5,10 @@ pub mod x86_64_arch;
 pub use x86_64_arch::*;
 
 #[cfg(target_arch = "aarch64")]
-pub mod aarch64;
+pub mod aarch64_arch;
 
 #[cfg(target_arch = "aarch64")]
-pub use aarch64::*;
+pub use aarch64_arch::*;
 
 pub fn init() {
     #[cfg(target_arch = "x86_64")]

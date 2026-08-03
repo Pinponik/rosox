@@ -59,6 +59,7 @@ pub enum QemuExitCode {
     Failed = 0x11,
 }
 
+#[cfg(target_arch = "x86_64")]
 pub fn exit_qemu(exit_code: QemuExitCode) {
     use x86_64::instructions::port::Port;
 
@@ -67,3 +68,6 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
         port.write(exit_code as u32);
     }
 }
+
+#[cfg(target_arch = "aarch64")]
+pub fn exit_qemu(exit_code: QemuExitCode) {}
