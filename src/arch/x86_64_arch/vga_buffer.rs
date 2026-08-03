@@ -22,6 +22,24 @@ macro_rules! println {
     ($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
 }
 
+#[macro_export]
+macro_rules! color_print {
+    ($fg:expr, $bg:expr, $($arg:tt)*) => {
+        let mut writer = $crate::arch::vga_buffer::WRITER.lock();
+        let old_color = writer.get_color();
+        writer.set_color($crate::arch::vga_buffer::ColorCode::new($fg, $bg));
+        let _ = writer.write_fmt(format_args!($($arg)*));
+        writer.set_color(old_color);
+        drop(writer);
+    };
+}
+
+#[macro_export]
+macro_rules! color_println {
+    (fg:expr, $bg:expr) => ($crate::color_print!($fg, $bg, "\n"));
+    ($fg:expr, $bg:expr, $($arg:tt)*) => ($crate::color_print!($fg, $bg, "{}\n", format_args!($($arg)*)));
+}
+
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
     use core::fmt::Write;
@@ -52,10 +70,10 @@ pub enum Color {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(transparent)]
-struct ColorCode(u8);
+pub struct ColorCode(u8);
 
 impl ColorCode {
-    fn new(foreground: Color, background: Color) -> ColorCode {
+    pub fn new(foreground: Color, background: Color) -> ColorCode {
         ColorCode((background as u8) << 4 | (foreground as u8))
     }
 }
@@ -133,6 +151,14 @@ impl Writer {
                 _ => self.write_byte(0xfe),
             }
         }
+    }
+
+    pub fn set_color(&mut self, color_code: ColorCode) {
+        self.color_code = color_code;
+    }
+
+    pub fn get_color(&self) -> ColorCode {
+        self.color_code
     }
 }
 

@@ -6,8 +6,12 @@
 #![feature(abi_x86_interrupt)]
 
 pub mod arch;
+pub mod bsp;
+pub mod cpu;
 pub use arch::*;
 use core::panic::PanicInfo;
+pub use vga_buffer::Color;
+pub mod panic;
 
 pub trait Testable {
     fn run(&self) -> ();
@@ -46,12 +50,6 @@ pub extern "C" fn _start() -> ! {
     init();
     test_main();
     loop {}
-}
-
-#[cfg(test)]
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    test_panic_handler(info)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

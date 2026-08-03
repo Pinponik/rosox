@@ -4,7 +4,7 @@
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-use core::panic::PanicInfo;
+// use core::panic::PanicInfo;
 use rosox::println;
 use rosox::test_runner;
 
@@ -15,10 +15,10 @@ pub extern "C" fn _start() -> ! {
     loop {}
 }
 
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    rosox::test_panic_handler(info)
-}
+// #[panic_handler]
+// fn panic(info: &PanicInfo) -> ! {
+//     rosox::test_panic_handler(info)
+// }
 
 #[test_case]
 fn test_println() {

@@ -6,35 +6,27 @@
 #![feature(abi_x86_interrupt)]
 
 pub mod arch;
-
-use core::panic::PanicInfo;
+use arch::*;
+use core::fmt::Write;
+pub use core::panic::PanicInfo;
+use vga_buffer::Color;
 
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
-    println!("rOSox v{}\n", env!("CARGO_PKG_VERSION"));
-
-    rosox::init(); // new
-
-    // invoke a breakpoint exception
-    x86_64::instructions::interrupts::int3(); // new
+    color_print!(Color::Magenta, Color::Black, "rOSox");
+    color_println!(
+        Color::LightRed,
+        Color::Black,
+        " v{}\n",
+        env!("CARGO_PKG_VERSION")
+    );
 
     #[cfg(test)]
     test_main();
 
-    println!("It did not crash!");
     loop {}
 }
 
-/// This function is called on panic.
-#[cfg(not(test))]
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    println!("{}", info);
-    loop {}
-}
-
-#[cfg(test)]
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    rosox::test_panic_handler(info)
+unsafe fn kernel_init() -> ! {
+    panic!()
 }

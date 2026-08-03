@@ -6,6 +6,7 @@ edition = "2024"
 [profile.dev]
 
 [profile.release]
+lto = true
 
 [[bin]]
 name = "rosox"
@@ -33,3 +34,5 @@ test-timeout = 300
 [features]
 default = ["qemu"]
 qemu = []
+bsp_rpi3 = []
+bsp_rpi4 = []
